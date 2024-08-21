@@ -9,13 +9,13 @@ RESET='\033[0m'  # 重置颜色
 
 # 描述区域
 echo -e "${BLUE}#########################################################${RESET}"
-echo -e "${BLUE}#                  青龙面板安装脚本                #${RESET}"
+echo -e "${BLUE}#                  青龙面板安装脚本                      #${RESET}"
 echo -e "${BLUE}#                                                       #${RESET}"
-echo -e "${BLUE}# 这个脚本将帮助你安装 Docker 并部署 Qinglong 容器。   #${RESET}"
+echo -e "${BLUE}# 这个脚本将帮助你安装 Docker 并部署 Qinglong 容器。       #${RESET}"
 echo -e "${BLUE}#                                                       #${RESET}"
-echo -e "${BLUE}# 你可以自定义容器的端口号、主机名和名称。            #${RESET}"
+echo -e "${BLUE}# 你可以自定义容器的端口号、主机名和名称。                  #${RESET}"
 echo -e "${BLUE}#                                                       #${RESET}"
-echo -e "${BLUE}# 在运行脚本之前，请确保你以 root 用户身份运行。      #${RESET}"
+echo -e "${BLUE}# 在运行脚本之前，请确保你以 root 用户身份运行。            #${RESET}"
 echo -e "${BLUE}#########################################################${RESET}"
 echo ""
 
@@ -51,7 +51,7 @@ function check_docker_status() {
 function main() {
   while true; do
     show_menu
-    read -p "${YELLOW}请输入你的选择 [0-3]:" CHOICE
+    read -r -p "${YELLOW}请输入你的选择 [0-3]:" CHOICE
 
     case $CHOICE in
       1)
@@ -87,7 +87,7 @@ function main() {
     esac
 
     # 提示用户按回车键返回菜单
-    #read -p "${YELLOW}按回车键返回菜单...${RESET}" discard
+    read -r -p "${YELLOW}按回车键返回菜单...${RESET}" discard
   done
 }
 
