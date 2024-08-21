@@ -53,41 +53,7 @@ function main() {
     show_menu
     read -r -p "${YELLOW}请输入你的选择 [0-3]:" CHOICE
 
-    case $CHOICE in
-      1)
-        # 开始安装并检查 Docker 安装状态
-        install_docker
-        check_docker_status
-        ;;
-      2)
-        # 查看 Docker 容器列表
-        echo -e "${BLUE}查看 Docker 容器列表...${RESET}"
-        docker ps
-        ;;
-      3)
-        # 重启 Docker 服务
-        echo -e "${BLUE}重启 Docker 服务...${RESET}"
-        systemctl restart docker
-        if [ $? -ne 0 ]; then
-          echo -e "${RED}Docker 服务重启失败！${RESET}"
-        else
-          echo -e "${GREEN}Docker 服务已重启。${RESET}"
-        fi
-        ;;
-      0)
-        # 退出脚本
-        echo -e "${GREEN}退出脚本。${RESET}"
-        exit 0
-        ;;
-      *)
-        # 处理无效选择
-        echo -e "${RED}无效选择，请输入 0-3。${RESET}"
-        sleep 5  # 等待2秒钟，以便用户看到错误信息
-        ;;
-    esac
-
-    # 提示用户按回车键返回菜单
-    read -r -p "${YELLOW}按回车键返回菜单...${RESET}" discard
+    
   done
 }
 
