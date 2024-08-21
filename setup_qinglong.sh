@@ -21,6 +21,7 @@ echo ""
 
 # 显示菜单并获取用户选择
 function show_menu() {
+  clear
   echo -e "${BLUE}请选择一个操作：${RESET}"
   echo -e "1. ${YELLOW}开始安装青龙面板${RESET}"
   echo -e "2. ${YELLOW}查看青龙Docker容器列表${RESET}"
@@ -83,6 +84,9 @@ function main() {
         echo -e "${RED}无效选择，请输入 0-3。${RESET}"
         ;;
     esac
+
+    # 提示用户按回车键返回菜单
+    read -p "${YELLOW}按回车键返回菜单...${RESET}"
   done
 }
 
