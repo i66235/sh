@@ -9,7 +9,7 @@ RESET='\033[0m'  # 重置颜色
 
 # 描述区域
 echo -e "${BLUE}#########################################################${RESET}"
-echo -e "${BLUE}#                  Qinglong 容器安装脚本                #${RESET}"
+echo -e "${BLUE}#                  青龙面板安装脚本                #${RESET}"
 echo -e "${BLUE}#                                                       #${RESET}"
 echo -e "${BLUE}# 这个脚本将帮助你安装 Docker 并部署 Qinglong 容器。   #${RESET}"
 echo -e "${BLUE}#                                                       #${RESET}"
@@ -19,62 +19,72 @@ echo -e "${BLUE}# 在运行脚本之前，请确保你以 root 用户身份运�
 echo -e "${BLUE}#########################################################${RESET}"
 echo ""
 
-# 检查 Docker 安装状态
-echo -e "${BLUE}检查 Docker 安装状态...${RESET}"
-if command -v docker &> /dev/null; then
-  echo -e "${GREEN}Docker 已安装。${RESET}"
-else
-  echo -e "${RED}Docker 未安装。${RESET}"
-fi
+# 显示菜单并获取用户选择
+function show_menu() {
+  echo -e "${BLUE}请选择一个操作：${RESET}"
+  echo -e "1. ${YELLOW}开始安装青龙面板${RESET}"
+  echo -e "2. ${YELLOW}查看青龙Docker容器列表${RESET}"
+  echo -e "3. ${YELLOW}重启青龙Docker服务${RESET}"
+  echo -e "0. ${RED}退出脚本${RESET}"
+}
 
-# 提示用户按回车键继续
-read -p "${YELLOW}按回车键继续安装 Docker（如果未安装）并启动 Qinglong 容器...${RESET}"
-
-# 安装 Docker（如果尚未安装）
-if ! command -v docker &> /dev/null; then
-  echo -e "${BLUE}Docker 未安装，正在安装 Docker...${RESET}"
-  curl -sSL get.docker.com | sh
+function install_docker() {
+  echo -e "${BLUE}正在安装 Docker...${RESET}"
+  curl -sSL https://get.docker.com | sh
   if [ $? -ne 0 ]; then
     echo -e "${RED}Docker 安装失败！${RESET}"
     exit 1
   fi
   echo -e "${GREEN}Docker 安装成功！${RESET}"
-else
-  echo -e "${GREEN}Docker 已安装。${RESET}"
-fi
+}
 
-# 获取用户输入的端口、主机名和容器名称
-read -p "${YELLOW}请输入 Qinglong 容器的端口号 [默认为 5700]: " QL_PORT
-# 如果用户没有输入，使用默认值 5700
-QL_PORT=${QL_PORT:-5700}
+function check_docker_status() {
+  echo -e "${BLUE}检查 Docker 安装状态...${RESET}"
+  if command -v docker &> /dev/null; then
+    echo -e "${GREEN}Docker 已安装。${RESET}"
+  else
+    echo -e "${RED}Docker 未安装。${RESET}"
+  fi
+}
 
-read -p "${YELLOW}请输入 Qinglong 容器的主机名 [默认为 qinglong]: " QL_HOSTNAME
-# 如果用户没有输入，使用默认值 qinglong
-QL_HOSTNAME=${QL_HOSTNAME:-qinglong}
+function main() {
+  while true; do
+    show_menu
+    read -p "${YELLOW}请输入你的选择 [0-3]: " CHOICE
 
-read -p "${YELLOW}请输入 Qinglong 容器的名称 [默认为 qinglong]: " QL_NAME
-# 如果用户没有输入，使用默认值 qinglong
-QL_NAME=${QL_NAME:-qinglong}
+    case $CHOICE in
+      1)
+        # 开始安装并检查 Docker 安装状态
+        install_docker
+        check_docker_status
+        ;;
+      2)
+        # 查看 Docker 容器列表
+        echo -e "${BLUE}查看 Docker 容器列表...${RESET}"
+        docker ps
+        ;;
+      3)
+        # 重启 Docker 服务
+        echo -e "${BLUE}重启 Docker 服务...${RESET}"
+        systemctl restart docker
+        if [ $? -ne 0 ]; then
+          echo -e "${RED}Docker 服务重启失败！${RESET}"
+        else
+          echo -e "${GREEN}Docker 服务已重启。${RESET}"
+        fi
+        ;;
+      0)
+        # 退出脚本
+        echo -e "${GREEN}退出脚本。${RESET}"
+        exit 0
+        ;;
+      *)
+        # 处理无效选择
+        echo -e "${RED}无效选择，请输入 0-3。${RESET}"
+        ;;
+    esac
+  done
+}
 
-# 运行 Qinglong Docker 容器
-echo -e "${BLUE}正在启动 Qinglong Docker 容器...${RESET}"
-docker run -dit \
-  -v $PWD/ql/data:/ql/data \
-  -p ${QL_PORT}:${QL_PORT} \
-  -e QlBaseUrl="/" \
-  -e QlPort="${QL_PORT}" \
-  --name ${QL_NAME} \
-  --hostname ${QL_HOSTNAME} \
-  --restart unless-stopped \
-  whyour/qinglong:latest
-
-# 检查 Docker 容器运行状态
-echo -e "${BLUE}检查 Qinglong 容器运行状态...${RESET}"
-if docker ps --filter "name=${QL_NAME}" | grep -q "${QL_NAME}"; then
-  echo -e "${GREEN}Qinglong 容器正在运行。${RESET}"
-else
-  echo -e "${RED}Qinglong 容器未运行。${RESET}"
-fi
-
-# 提示用户按任意键退出
-read -n 1 -p "${YELLOW}按任意键退出...${RESET}"
+# 进入菜单循环
+main
