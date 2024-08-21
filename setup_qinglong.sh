@@ -50,8 +50,8 @@ function check_docker_status() {
 
 function main() {
   while true; do
-    show_menu
-    read -p "${YELLOW}请输入你的选择 [0-3]: " CHOICE
+    #show_menu
+    read -p "${YELLOW}请输入你的选择 [0-3]:" CHOICE
 
     case $CHOICE in
       1)
