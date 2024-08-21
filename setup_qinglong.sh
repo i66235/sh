@@ -82,11 +82,12 @@ function main() {
       *)
         # 处理无效选择
         echo -e "${RED}无效选择，请输入 0-3。${RESET}"
+        sleep 5  # 等待2秒钟，以便用户看到错误信息
         ;;
     esac
 
     # 提示用户按回车键返回菜单
-    read -p "${YELLOW}按回车键返回菜单...${RESET}"
+    read -p "${YELLOW}按回车键返回菜单...${RESET}" discard
   done
 }
 
