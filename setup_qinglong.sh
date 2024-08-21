@@ -49,8 +49,8 @@ function check_docker_status() {
 }
 
 function main() {
-  
-    #show_menu
+  while true; do
+    show_menu
     read -p "${YELLOW}请输入你的选择 [0-3]:" CHOICE
 
     case $CHOICE in
@@ -87,8 +87,8 @@ function main() {
     esac
 
     # 提示用户按回车键返回菜单
-    read -p "${YELLOW}按回车键返回菜单...${RESET}" discard
-  
+    #read -p "${YELLOW}按回车键返回菜单...${RESET}" discard
+  done
 }
 
 # 进入菜单循环
